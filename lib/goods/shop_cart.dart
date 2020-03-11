@@ -18,8 +18,11 @@ class _ShopCartState extends State<ShopCart> {
       body: Container(
         alignment: Alignment.center,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
+              width: 100,
+              height: 100,
               child: CachedNetworkImage(
                 imageUrl: '${baseUrl}Public/images/shopcart.png',
                 placeholder: (context, url) => Icon(
@@ -31,9 +34,9 @@ class _ShopCartState extends State<ShopCart> {
                 right: 10,
               ),
             ),
-            Expanded(
+            Container(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(

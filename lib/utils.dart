@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 
-final baseUrl = 'http://192.168.1.230/';
+final baseUrl = 'https://chenfeng.tech:7779/';
 
 ajaxSimple(String url, data, Function fun, {Function netError}) async {
   var dio = Dio();

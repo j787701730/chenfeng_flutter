@@ -17,7 +17,7 @@ class CFColors {
 class CFFontSize {
   static const double topTitle = 20.0;
   static const double title = 16.0;
-  static const double content = 14.0;
+  static const double content = 12.0;
   static const double assist = 14.0;
   static const double tabBar = 12.0;
 }

@@ -19,7 +19,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
   List topMenu = [
     {'img': 'Public/images/nav/cloud.png', 'name': '云拆单', 'color': 'F61D4B', 'url': '${baseUrl}Product'},
-    {'img': 'Public/images/nav/task.png', 'name': '任务广场', 'color': '9231F4', 'route': '/goodsClass'},
+    {'img': 'Public/images/nav/task.png', 'name': '任务广场', 'color': '9231F4', 'route': '/tasks'},
     {'img': 'Public/images/nav/course.png', 'name': '软件教程', 'color': 'FF6D00', 'route': '/goodsClass'},
     {'img': 'Public/images/nav/community.png', 'name': '晨丰社区', 'color': '2C9DF7', 'route': '/goodsClass'},
     {'img': 'Public/images/nav/classify.png', 'name': '商品分类', 'color': '31ABA6', 'route': '/goodsClass'},
@@ -114,9 +114,6 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                           },
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 5),
-                            margin: EdgeInsets.only(
-                              bottom: 10,
-                            ),
                             child: Column(
                               children: <Widget>[
                                 Container(
@@ -133,7 +130,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.only(top: 6),
+                                  padding: EdgeInsets.only(top: 4),
                                   child: Text(
                                     '${item['name']}',
                                     style: TextStyle(

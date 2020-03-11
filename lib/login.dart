@@ -22,9 +22,11 @@ class _LoginState extends State<Login> {
   }
 
   login() async {
-    ajax('Adminrelas-Index-loginCheck', {"psw": password, "username": loginName}, true, (res) {
+    ajax('user-login', {"password": password, "username": loginName}, true, (res) {
       if (res.runtimeType != String && res['err_code'] == 0) {
-        getAccess();
+//        print('xxxx');
+//        getAccess();
+        Navigator.pushNamed(context, '/home');
       } else {
         if (res.runtimeType == String) {
           Fluttertoast.showToast(
@@ -92,7 +94,7 @@ class _LoginState extends State<Login> {
               child: Text(
                 '用户登录',
                 style: TextStyle(
-                  fontSize: CFFontSize.topTitle,
+                  fontSize: CFFontSize.title,
                 ),
               ),
             ),
@@ -105,7 +107,6 @@ class _LoginState extends State<Login> {
                     Icons.person,
                     size: 20,
                   ),
-                  border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.only(top: 0, bottom: 0),
                   hintText: "账号",
                 ),
@@ -129,7 +130,6 @@ class _LoginState extends State<Login> {
                     Icons.lock,
                     size: 20,
                   ),
-                  border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.only(top: 0, bottom: 0),
                   hintText: "密码",
                 ),
@@ -164,7 +164,6 @@ class _LoginState extends State<Login> {
                 },
                 child: Text(
                   '登录',
-                  style: TextStyle(fontSize: 16),
                 ),
               ),
             )
