@@ -414,17 +414,10 @@ class _GoodsSearchState extends State<GoodsSearch> {
                                     height: width * 0.4,
                                     child: Stack(
                                       children: <Widget>[
-                                        Positioned(
-                                          right: 0,
-                                          top: 0,
-                                          child: Container(
-                                            child: Text('${item['goods_type_name']}'),
-                                          ),
-                                        ),
                                         Container(
                                           alignment: Alignment.center,
                                           child: CachedNetworkImage(
-                                            imageUrl: '${item['goods_url']}',
+                                            imageUrl: '$baseUrl${item['goods_url']}',
                                             fit: BoxFit.contain,
                                             placeholder: (context, url) => Icon(
                                               Icons.image,
@@ -434,6 +427,13 @@ class _GoodsSearchState extends State<GoodsSearch> {
                                               Icons.broken_image,
                                               color: Colors.grey,
                                             ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          right: 0,
+                                          top: 0,
+                                          child: Container(
+                                            child: Text('${item['goods_type_name']}'),
                                           ),
                                         ),
                                       ],
