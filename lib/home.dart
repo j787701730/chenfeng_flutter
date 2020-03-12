@@ -55,33 +55,34 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Container(
-            height: 34,
-            decoration: BoxDecoration(
-              color: Color(0xffeeeeee),
-              borderRadius: BorderRadius.all(
-                Radius.circular(44),
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              Navigator.pushNamed(context, '/search');
+            },
+            child: Container(
+              height: 34,
+              padding: EdgeInsets.only(
+                left: 10,
               ),
-            ),
-            child: TextField(
-              style: TextStyle(
-                fontSize: CFFontSize.content,
+              decoration: BoxDecoration(
+                color: Color(0xffeeeeee),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(44),
+                ),
               ),
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.search,
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: EdgeInsets.only(
-                  top: 6,
-                  bottom: 6,
-                  left: 15,
-                ),
-                hintText: '请输入关键字',
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.search),
+                  Text(
+                    ' 请输入关键字',
+                    style: TextStyle(
+                      fontSize: CFFontSize.content,
+                      color: CFColors.gray,
+                    ),
+                  ),
+                ],
               ),
-              onChanged: (val) {},
             ),
           ),
         ),

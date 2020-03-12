@@ -12,12 +12,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class Tasks extends StatefulWidget {
+class GoodsSearch extends StatefulWidget {
+  final goodsName;
+
+  GoodsSearch({this.goodsName = ''});
+
   @override
-  _TasksState createState() => _TasksState();
+  _GoodsSearchState createState() => _GoodsSearchState();
 }
 
-class _TasksState extends State<Tasks> {
+class _GoodsSearchState extends State<GoodsSearch> {
   Map param = {'curr_page': 1, 'page_count': 20};
   Map searchData = {
     'task_type': [],
@@ -62,6 +66,9 @@ class _TasksState extends State<Tasks> {
     super.initState();
     _controller = ScrollController();
     _context = context;
+    param["shop_name"] = true;
+    param['audit_state'] = 1;
+    param['goods_name'] = widget.goodsName;
     Timer(Duration(milliseconds: 200), () {
       getData();
     });
@@ -172,11 +179,11 @@ class _TasksState extends State<Tasks> {
         }
       }
     });
-    ajax('Tasks-getTasks', {'param': jsonEncode(param)}, true, (res) {
+    ajaxSimple('GoodsSearch-search', {'goods': jsonEncode(param)}, (res) {
       if (mounted) {
         setState(() {
-          logs = res['tasks'] ?? [];
-          count = int.tryParse('${res['count'] ?? 0}');
+          logs = res['goods'] ?? [];
+          count = int.tryParse('${res['goodsCount'] ?? 0}');
           toTop();
           loading = false;
         });
@@ -184,11 +191,7 @@ class _TasksState extends State<Tasks> {
           _refreshController.refreshCompleted();
         }
       }
-    }, () {
-      setState(() {
-        loading = false;
-      });
-    }, _context);
+    });
   }
 
   toTop() {
@@ -262,7 +265,7 @@ class _TasksState extends State<Tasks> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('任务广场'),
+        title: Text('商品搜索'),
         actions: <Widget>[Container()],
       ),
       endDrawer: Container(
@@ -391,193 +394,136 @@ class _TasksState extends State<Tasks> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: logs.map<Widget>((item) {
                             return Container(
-                              margin: EdgeInsets.only(bottom: 10),
+                              margin: EdgeInsets.only(
+                                bottom: 10,
+                              ),
                               padding: EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Color(0xffdddddd),
-                                  width: 0.5,
-                                ),
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(2),
                                 ),
                               ),
-                              child: Column(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  RichText(
-                                    text: TextSpan(
-                                      children: <TextSpan>[
-                                        item['top'] == '1'
-                                            ? TextSpan(
-                                                text: '置顶',
-                                                style: TextStyle(
-                                                  background: Paint()..color = Color(0xfffd5647),
-                                                  color: Colors.white,
-                                                ),
-                                              )
-                                            : TextSpan(
-                                                text: '',
-                                              ),
-                                        TextSpan(
-                                          text: item['top'] == '1' && item['anonymous'] == '1' ? ' ' : '',
-                                        ),
-                                        item['anonymous'] == '1'
-                                            ? TextSpan(
-                                                text: '匿名',
-                                                style: TextStyle(
-                                                  background: Paint()..color = Color(0xffff9400),
-                                                  color: Colors.white,
-                                                ),
-                                              )
-                                            : TextSpan(
-                                                text: '',
-                                              ),
-                                        TextSpan(
-                                          text: ' ${item['task_name']}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xff0b73bb),
-                                          ),
-                                        ),
-                                      ],
-                                      style: TextStyle(
-                                        color: CFColors.text,
-                                        fontSize: CFFontSize.content,
-                                      ),
-                                    ),
-                                  ),
                                   Container(
                                     margin: EdgeInsets.only(
-                                      top: 4,
+                                      right: 10,
                                     ),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    width: width * 0.4,
+                                    height: width * 0.4,
+                                    child: Stack(
                                       children: <Widget>[
-                                        Expanded(
-                                          flex: 1,
+                                        Positioned(
+                                          right: 0,
+                                          top: 0,
                                           child: Container(
-                                            padding: EdgeInsets.only(right: 3),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Container(
-                                                  margin: EdgeInsets.only(bottom: 2),
-                                                  child: Text('订单单号：${item['order_no']}'),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(bottom: 2),
-                                                  child: Text('任务类型：${item['type_ch_name']}'),
-                                                ),
-                                                GestureDetector(
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(bottom: 2),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Container(
-                                                          width: 24,
-                                                          height: 24,
-                                                          child: CachedNetworkImage(
-                                                            imageUrl: '$baseUrl${item['shop_logo']}',
-                                                            fit: BoxFit.contain,
-                                                            placeholder: (context, url) => Icon(
-                                                              Icons.image,
-                                                              color: Colors.grey,
-                                                            ),
-                                                            errorWidget: (context, url, error) => Icon(
-                                                              Icons.broken_image,
-                                                              color: Colors.grey,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Expanded(child: Text(' ${item['shop_name']}'))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                            child: Text('${item['goods_type_name']}'),
                                           ),
                                         ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            padding: EdgeInsets.only(left: 3),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Container(
-                                                  margin: EdgeInsets.only(bottom: 2),
-                                                  child: Text('${item['state_ch_name']}'),
-                                                ),
-                                                item['markup_type'] == '1'
-                                                    ? Container(
-                                                        margin: EdgeInsets.only(bottom: 2),
-                                                        child: RichText(
-                                                          text: TextSpan(
-                                                            children: <TextSpan>[
-                                                              TextSpan(
-                                                                text: '${item['markup_value']}',
-                                                                style: TextStyle(
-                                                                  color: Color(0xfff76812),
-                                                                  fontWeight: FontWeight.bold,
-                                                                ),
-                                                              ),
-                                                              TextSpan(
-                                                                text: '倍加价',
-                                                              ),
-                                                            ],
-                                                            style: TextStyle(
-                                                              color: CFColors.text,
-                                                              fontSize: CFFontSize.content,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : item['markup_type'] == '2'
-                                                        ? Container(
-                                                            margin: EdgeInsets.only(bottom: 2),
-                                                            child: RichText(
-                                                              text: TextSpan(
-                                                                children: <TextSpan>[
-                                                                  TextSpan(
-                                                                    text: '加价',
-                                                                  ),
-                                                                  TextSpan(
-                                                                    text: '${item['markup_value']}',
-                                                                    style: TextStyle(
-                                                                      color: Color(0xfff76812),
-                                                                      fontWeight: FontWeight.bold,
-                                                                    ),
-                                                                  ),
-                                                                  TextSpan(
-                                                                    text: '元',
-                                                                  ),
-                                                                ],
-                                                                style: TextStyle(
-                                                                  color: CFColors.text,
-                                                                  fontSize: CFFontSize.content,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : Container(),
-                                                Container(
-                                                  margin: EdgeInsets.only(bottom: 2),
-                                                  child: Text('${item['create_date']} 创建'),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(bottom: 2),
-                                                  child: Text('${item['start_date']} 开始'),
-                                                ),
-                                                Container(
-                                                  child: Text('${item['end_date']} 截止'),
-                                                ),
-                                              ],
+                                        Container(
+                                          alignment: Alignment.center,
+                                          child: CachedNetworkImage(
+                                            imageUrl: '${item['goods_url']}',
+                                            fit: BoxFit.contain,
+                                            placeholder: (context, url) => Icon(
+                                              Icons.image,
+                                              color: Colors.grey,
+                                            ),
+                                            errorWidget: (context, url, error) => Icon(
+                                              Icons.broken_image,
+                                              color: Colors.grey,
                                             ),
                                           ),
                                         ),
                                       ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            height: 36,
+                                            child: Text(
+                                              '${item['goods_name']}',
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: CFFontSize.title,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Text(
+                                              double.tryParse(item['goods_price']) == 0
+                                                  ? '免费'
+                                                  : '¥${item['goods_price']}',
+                                              style: TextStyle(
+                                                color: Color(0xffff4400),
+                                                fontSize: CFFontSize.title,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Text(
+                                              '${item['shop_name']}',
+                                              style: TextStyle(
+                                                color: CFColors.gray,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Icon(
+                                                        Icons.remove_red_eye,
+                                                        size: 16,
+                                                        color: CFColors.gray,
+                                                      ),
+                                                      Text(
+                                                        ' ${item['browse_times']}',
+                                                        style: TextStyle(
+                                                          color: CFColors.gray,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: 1,
+                                                  height: 14,
+                                                  margin: EdgeInsets.symmetric(horizontal: 4),
+                                                  color: CFColors.gray,
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      Icon(
+                                                        Icons.shopping_cart,
+                                                        size: 16,
+                                                        color: CFColors.gray,
+                                                      ),
+                                                      Text(
+                                                        ' ${item['sales_volume']}',
+                                                        style: TextStyle(
+                                                          color: CFColors.gray,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

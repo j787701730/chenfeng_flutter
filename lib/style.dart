@@ -11,12 +11,13 @@ class CFColors {
   static const Color dark = Color(0xff343a40);
   static const Color white = Color(0xffffffff);
   static const Color text = Color(0xff333333);
+  static const Color gray = Color(0xff999999);
   static const Color transparent = Colors.transparent;
 }
 
 class CFFontSize {
   static const double topTitle = 20.0;
-  static const double title = 16.0;
+  static const double title = 14.0;
   static const double content = 12.0;
   static const double assist = 14.0;
   static const double tabBar = 12.0;

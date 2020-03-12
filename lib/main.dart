@@ -3,6 +3,7 @@ import 'package:chenfengflutter/goods/goods_class.dart';
 import 'package:chenfengflutter/localizations.dart';
 import 'package:chenfengflutter/login.dart';
 import 'package:chenfengflutter/my_home_page.dart';
+import 'package:chenfengflutter/search.dart';
 import 'package:chenfengflutter/task/task.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'style.dart';
 import 'style.dart';
 import 'style.dart';
 import 'style.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -83,6 +85,7 @@ class MyApp extends StatelessWidget {
         '/login': (_) => Login(),
         '/goodsClass': (_) => GoodsClass(),
         '/tasks': (_) => Tasks(),
+        '/search': (_) => Search(),
       },
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
