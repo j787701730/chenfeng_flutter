@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:chenfengflutter/primary_button.dart';
+import 'package:chenfengflutter/shop/shop_search.dart';
 import 'package:chenfengflutter/style.dart';
 import 'package:chenfengflutter/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,7 +55,7 @@ class _SearchState extends State<Search> {
       loading = true;
     });
     ajaxSimple('Search-getKeywords', param, (res) {
-      print(res);
+//      print(res);
       if (mounted) {
         setState(() {
           logs = res ?? [];
@@ -70,33 +72,63 @@ class _SearchState extends State<Search> {
         automaticallyImplyLeading: false,
         title: Container(
           alignment: Alignment.center,
-          child: Container(
-            height: 34,
-            child: TextField(
-              controller: TextEditingController.fromValue(
-                TextEditingValue(
-                  text: param['searchContent'],
-                  selection: TextSelection.fromPosition(
-                    TextPosition(affinity: TextAffinity.downstream, offset: param['searchContent'].length),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  height: 30,
+                  child: TextField(
+                    controller: TextEditingController.fromValue(
+                      TextEditingValue(
+                        text: param['searchContent'],
+                        selection: TextSelection.fromPosition(
+                          TextPosition(affinity: TextAffinity.downstream, offset: param['searchContent'].length),
+                        ),
+                      ),
+                    ),
+                    style: TextStyle(fontSize: CFFontSize.content),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.only(
+                        top: 0,
+                        bottom: 0,
+                        left: 10,
+                        right: 10,
+                      ),
+                      hintText: '',
+                    ),
+                    maxLines: 1,
+                    onChanged: (String val) {
+                      onChanged(val);
+                    },
                   ),
                 ),
               ),
-              style: TextStyle(fontSize: CFFontSize.content),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.only(
-                  top: 0,
-                  bottom: 0,
-                  left: 10,
-                  right: 10,
-                ),
-                hintText: '',
+              PrimaryButton(
+                onPressed: () {
+                  if (param['searchType'] == '1') {
+                    Navigator.push(
+                      _context,
+                      MaterialPageRoute(
+                        builder: (context) => GoodsSearch(
+                          goodsName: param['searchContent'],
+                        ),
+                      ),
+                    );
+                  } else if (param['searchType'] == '2') {
+                    Navigator.push(
+                      _context,
+                      MaterialPageRoute(
+                        builder: (context) => ShopSearch(
+                          shopName: param['searchContent'],
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Text('搜索'),
               ),
-              maxLines: 1,
-              onChanged: (String val) {
-                onChanged(val);
-              },
-            ),
+            ],
           ),
         ),
       ),
@@ -172,7 +204,18 @@ class _SearchState extends State<Search> {
                                     Navigator.push(
                                       _context,
                                       MaterialPageRoute(
-                                        builder: (context) => GoodsSearch(goodsName: item['keywords'],),
+                                        builder: (context) => GoodsSearch(
+                                          goodsName: item['keywords'],
+                                        ),
+                                      ),
+                                    );
+                                  } else if (param['searchType'] == '2') {
+                                    Navigator.push(
+                                      _context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ShopSearch(
+                                          shopName: item['keywords'],
+                                        ),
                                       ),
                                     );
                                   }

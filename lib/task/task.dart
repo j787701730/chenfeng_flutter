@@ -29,7 +29,7 @@ class _TasksState extends State<Tasks> {
     'orderNo': ''
   };
   String orderNo = '';
-  String order = '';
+  String order = 'create_date desc';
   List logs = [];
   int count = 0;
   BuildContext _context;
@@ -246,7 +246,6 @@ class _TasksState extends State<Tasks> {
     }
     param['curr_page'] = 1;
     order = val;
-    print(param);
     getData();
   }
 
@@ -314,9 +313,17 @@ class _TasksState extends State<Tasks> {
                           children: <Widget>[
                             Container(
                               alignment: Alignment.center,
-                              child: Text('最新'),
+                              child: Text(
+                                '最新',
+                                style: TextStyle(
+                                  color: order == 'create_date desc' ? Color(0xffb10000) : CFColors.text,
+                                ),
+                              ),
                             ),
-                            Icon(Icons.arrow_drop_down),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              color: order == 'create_date desc' ? Color(0xffb10000) : CFColors.text,
+                            ),
                           ],
                         ),
                       ),
@@ -335,9 +342,17 @@ class _TasksState extends State<Tasks> {
                           children: <Widget>[
                             Container(
                               alignment: Alignment.center,
-                              child: Text('快结束'),
+                              child: Text(
+                                '快结束',
+                                style: TextStyle(
+                                  color: order == 'end_date desc' ? Color(0xffb10000) : CFColors.text,
+                                ),
+                              ),
                             ),
-                            Icon(Icons.arrow_drop_down),
+                            Icon(
+                              Icons.arrow_drop_down,
+                              color: order == 'end_date desc' ? Color(0xffb10000) : CFColors.text,
+                            ),
                           ],
                         ),
                       ),

@@ -113,13 +113,15 @@ class _TaskDrawerState extends State<TaskDrawer> {
                             decoration: BoxDecoration(
                                 color: Color(0xfff5f5f5),
                                 border: Border.all(
-                                  color:
-                                      widget.searchData['task_type'].contains(item) ? Color(0xffc40000) : Colors.transparent,
+                                  color: widget.searchData['task_type'].contains(item)
+                                      ? Color(0xffc40000)
+                                      : Colors.transparent,
                                 ),
                                 image: DecorationImage(
                                   alignment: Alignment.bottomRight,
-                                  image:
-                                      AssetImage(widget.searchData['task_type'].contains(item) ? 'assets/selected.png' : ''),
+                                  image: AssetImage(widget.searchData['task_type'].contains(item)
+                                      ? 'assets/selected.png'
+                                      : 'assets/empty.png'),
                                 )),
                             padding: EdgeInsets.symmetric(
                               vertical: 6,
@@ -160,12 +162,15 @@ class _TaskDrawerState extends State<TaskDrawer> {
                           child: Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: widget.searchData['state'].contains(item) ? Color(0xffc40000) : Colors.transparent,
+                                color:
+                                    widget.searchData['state'].contains(item) ? Color(0xffc40000) : Colors.transparent,
                               ),
                               color: Color(0xfff5f5f5),
                               image: DecorationImage(
                                 alignment: Alignment.bottomRight,
-                                image: AssetImage(widget.searchData['state'].contains(item) ? 'assets/selected.png' : ''),
+                                image: AssetImage(widget.searchData['state'].contains(item)
+                                    ? 'assets/selected.png'
+                                    : 'assets/empty.png'),
                               ),
                             ),
                             padding: EdgeInsets.symmetric(
@@ -208,11 +213,15 @@ class _TaskDrawerState extends State<TaskDrawer> {
                             decoration: BoxDecoration(
                               color: Color(0xfff5f5f5),
                               border: Border.all(
-                                color: widget.searchData['task_time'].contains(list) ? Color(0xffc40000) : Colors.transparent,
+                                color: widget.searchData['task_time'].contains(list)
+                                    ? Color(0xffc40000)
+                                    : Colors.transparent,
                               ),
                               image: DecorationImage(
                                 alignment: Alignment.bottomRight,
-                                image: AssetImage(widget.searchData['task_time'].contains(list) ? 'assets/selected.png' : ''),
+                                image: AssetImage(widget.searchData['task_time'].contains(list)
+                                    ? 'assets/selected.png'
+                                    : 'assets/empty.png'),
                               ),
                             ),
                             padding: EdgeInsets.symmetric(
@@ -262,11 +271,14 @@ class _TaskDrawerState extends State<TaskDrawer> {
                             decoration: BoxDecoration(
                               color: Color(0xfff5f5f5),
                               border: Border.all(
-                                color: widget.searchData['markup_type'] == list ? Color(0xffc40000) : Colors.transparent,
+                                color:
+                                    widget.searchData['markup_type'] == list ? Color(0xffc40000) : Colors.transparent,
                               ),
                               image: DecorationImage(
                                 alignment: Alignment.bottomRight,
-                                image: AssetImage(widget.searchData['markup_type'] == list ? 'assets/selected.png' : ''),
+                                image: AssetImage(widget.searchData['markup_type'] == list
+                                    ? 'assets/selected.png'
+                                    : 'assets/empty.png'),
                               ),
                             ),
                             padding: EdgeInsets.symmetric(
@@ -319,8 +331,9 @@ class _TaskDrawerState extends State<TaskDrawer> {
                                     ),
                                     image: DecorationImage(
                                       alignment: Alignment.bottomRight,
-                                      image: AssetImage(
-                                          widget.searchData['markup_value'].contains(list) ? 'assets/selected.png' : ''),
+                                      image: AssetImage(widget.searchData['markup_value'].contains(list)
+                                          ? 'assets/selected.png'
+                                          : 'assets/empty.png'),
                                     ),
                                   ),
                                   padding: EdgeInsets.symmetric(
@@ -359,8 +372,9 @@ class _TaskDrawerState extends State<TaskDrawer> {
                                     ),
                                     image: DecorationImage(
                                       alignment: Alignment.bottomRight,
-                                      image: AssetImage(
-                                          widget.searchData['markup_value'].contains(list) ? 'assets/selected.png' : ''),
+                                      image: AssetImage(widget.searchData['markup_value'].contains(list)
+                                          ? 'assets/selected.png'
+                                          : 'assets/empty.png'),
                                     ),
                                   ),
                                   padding: EdgeInsets.symmetric(
@@ -412,8 +426,9 @@ class _TaskDrawerState extends State<TaskDrawer> {
                               ),
                               image: DecorationImage(
                                 alignment: Alignment.bottomRight,
-                                image: AssetImage(
-                                    widget.searchData['evaluate_state'].contains(list) ? 'assets/selected.png' : ''),
+                                image: AssetImage(widget.searchData['evaluate_state'].contains(list)
+                                    ? 'assets/selected.png'
+                                    : 'assets/empty.png'),
                               ),
                             ),
                             padding: EdgeInsets.symmetric(

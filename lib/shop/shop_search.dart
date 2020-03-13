@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chenfengflutter/goods/goods_search_drawer.dart';
+import 'package:chenfengflutter/shop/shop_search_drawer.dart';
 import 'package:chenfengflutter/plugin/number_bar.dart';
 import 'package:chenfengflutter/plugin/page_plugin.dart';
 import 'package:chenfengflutter/primary_button.dart';
@@ -12,26 +12,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class GoodsSearch extends StatefulWidget {
-  final goodsName;
+class ShopSearch extends StatefulWidget {
+  final shopName;
 
-  GoodsSearch({this.goodsName = ''});
+  ShopSearch({this.shopName = ''});
 
   @override
-  _GoodsSearchState createState() => _GoodsSearchState();
+  _ShopSearchState createState() => _ShopSearchState();
 }
 
-class _GoodsSearchState extends State<GoodsSearch> {
-  Map param = {'curr_page': 1, 'page_count': 20, 'shop_name': true, 'audit_state': 1};
+class _ShopSearchState extends State<ShopSearch> {
+  Map param = {'curr_page': 1, 'page_count': 20, "map_mode": false};
   Map param2 = {};
   Map searchData = {
-    'goodsSpec': [],
-    'goodsParam': [],
-    'goodsParamExt': [],
-    'goods': {
-      'shop_name': true,
-      'audit_state': 1,
-    }
+    'service_type': [],
+    'user_role': [],
   };
   Map orgSearchDataParam = {};
   String orderNo = '';
@@ -68,11 +63,9 @@ class _GoodsSearchState extends State<GoodsSearch> {
     super.initState();
     _controller = ScrollController();
     _context = context;
-    param['goods_name'] = widget.goodsName;
-    searchData['goods']['goods_name'] = widget.goodsName;
+    param['shop_name'] = widget.shopName;
     Timer(Duration(milliseconds: 200), () {
       getData();
-      getDataParam();
     });
   }
 
@@ -83,16 +76,11 @@ class _GoodsSearchState extends State<GoodsSearch> {
   }
 
   getData({isRefresh: false}) async {
-    Map data = {'goods': jsonEncode(param)};
-    param2.forEach((k, v) {
-      data[k] = v;
-    });
-    print(data);
-    ajaxSimple('GoodsSearch-search', data, (res) {
+    ajax('CrmSearch-fetchShop', {'param': jsonEncode(param)}, true, (res) {
       if (mounted) {
         setState(() {
-          logs = res['goods'] ?? [];
-          count = int.tryParse('${res['goodsCount'] ?? 0}');
+          logs = res['shop'] ?? [];
+          count = int.tryParse('${res['shopCount'] ?? 0}');
           toTop();
           loading = false;
         });
@@ -100,22 +88,11 @@ class _GoodsSearchState extends State<GoodsSearch> {
           _refreshController.refreshCompleted();
         }
       }
-    });
-  }
-
-  getDataParam({isRefresh: false}) async {
-    setState(() {
-      loading = true;
-    });
-    Map temp = jsonDecode(jsonEncode(searchData));
-    temp['goods'] = jsonEncode(temp['goods']);
-    ajaxSimple('GoodsSearch-getSearchParam', temp, (res) {
-      if (mounted) {
-        setState(() {
-          orgSearchDataParam = res.isEmpty ? {} : res;
-        });
-      }
-    });
+    }, () {
+      setState(() {
+        loading = false;
+      });
+    }, _context);
   }
 
   toTop() {
@@ -140,35 +117,21 @@ class _GoodsSearchState extends State<GoodsSearch> {
     }
     param['curr_page'] = 1;
     order = val;
-    print(param);
     getData();
   }
 
   searchFun(obj) {
     searchData = obj;
     param['curr_page'] = 1;
-    if (searchData['goodsParam'].isEmpty) {
-      param2.remove('goodsParam');
+    if (searchData['service_type'].isEmpty) {
+      param.remove('service_type');
     } else {
-      param2['goodsParam'] = jsonEncode(searchData['goodsParam']);
+      param['service_type'] = searchData['service_type'].join(',');
     }
-
-    if (searchData['goodsParamExt'].isEmpty) {
-      param2.remove('goodsParamExt');
+    if (searchData['user_role'].isEmpty) {
+      param.remove('user_role');
     } else {
-      param2['goodsParamExt'] = jsonEncode(searchData['goodsParamExt']);
-    }
-
-    if (searchData['goods']['goods_type'] == null) {
-      param.remove('goods_type');
-    } else {
-      param['goods_type'] = searchData['goods']['goods_type'];
-    }
-
-    if (searchData['goods']['goods_class_id'] == null) {
-      param.remove('goods_class_id');
-    } else {
-      param['goods_class_id'] = searchData['goods']['goods_class_id'];
+      param['user_role'] = searchData['user_role'].join(',');
     }
     getData();
   }
@@ -179,7 +142,7 @@ class _GoodsSearchState extends State<GoodsSearch> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('商品搜索'),
+        title: Text('店铺搜索'),
         actions: <Widget>[Container()],
       ),
       endDrawer: Container(
@@ -189,11 +152,10 @@ class _GoodsSearchState extends State<GoodsSearch> {
         padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top,
         ),
-        child: GoodsSearchDrawer(
+        child: ShopSearchDrawer(
           searchData: searchData,
           searchFun: searchFun,
           width: width,
-          orgData: orgSearchDataParam,
         ),
       ),
       body: SmartRefresher(
@@ -366,27 +328,23 @@ class _GoodsSearchState extends State<GoodsSearch> {
                               margin: EdgeInsets.only(
                                 bottom: 10,
                               ),
-                              padding: EdgeInsets.all(6),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(2),
                                 ),
                               ),
-                              child: Row(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Container(
-                                    margin: EdgeInsets.only(
-                                      right: 10,
-                                    ),
-                                    width: width * 0.3,
-                                    height: width * 0.3,
-                                    child: Stack(
+                                    child: Row(
                                       children: <Widget>[
                                         Container(
-                                          alignment: Alignment.center,
+                                          width: 24,
+                                          height: 24,
+                                          margin: EdgeInsets.only(right: 10),
                                           child: CachedNetworkImage(
-                                            imageUrl: '$baseUrl${item['goods_url']}',
+                                            imageUrl: '$baseUrl${item['shop_logo']}',
                                             fit: BoxFit.contain,
                                             placeholder: (context, url) => Icon(
                                               Icons.image,
@@ -398,109 +356,54 @@ class _GoodsSearchState extends State<GoodsSearch> {
                                             ),
                                           ),
                                         ),
-                                        Positioned(
-                                          right: 0,
-                                          top: 0,
-                                          child: Container(
-                                            child: Text('${item['goods_type_name']}'),
-                                          ),
-                                        ),
+                                        Expanded(
+                                            child: Text(
+                                          '${item['shop_name']}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(),
+                                        ))
                                       ],
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Container(
-                                      height: width * 0.3,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                            height: 36,
-                                            child: Text(
-                                              '${item['goods_name']}',
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: CFFontSize.title,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            child: Text(
-                                              double.tryParse(item['goods_price']) == 0
-                                                  ? '免费'
-                                                  : '¥${item['goods_price']}',
-                                              style: TextStyle(
-                                                color: Color(0xffff4400),
-                                                fontSize: CFFontSize.title,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            child: Text(
-                                              '${item['shop_name']}',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                color: CFColors.gray,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            child: Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      Icon(
-                                                        Icons.remove_red_eye,
-                                                        size: 16,
-                                                        color: CFColors.gray,
-                                                      ),
-                                                      Text(
-                                                        ' ${item['browse_times']}',
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: TextStyle(
-                                                          color: CFColors.gray,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: 1,
-                                                  height: 14,
-                                                  margin: EdgeInsets.symmetric(horizontal: 4),
-                                                  color: CFColors.gray,
-                                                ),
-                                                Expanded(
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      Icon(
-                                                        Icons.shopping_cart,
-                                                        size: 16,
-                                                        color: CFColors.gray,
-                                                      ),
-                                                      Text(
-                                                        ' ${item['sales_volume']}',
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: TextStyle(
-                                                          color: CFColors.gray,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                  Container(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          child: Text('服务类型：'),
+                                        ),
+                                        Expanded(
+                                          child: Text('${item['service_type_name']}'),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          child: Text('店铺角色：'),
+                                        ),
+                                        Expanded(
+                                          child: Text('${item['role_name']}'),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          child: Text('店铺地址：'),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                              '${item['province_name']} ${item['city_name']} ${item['region_name']} ${item['shop_address']}'),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ],
